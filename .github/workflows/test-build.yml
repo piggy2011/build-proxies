@@ -1,4 +1,4 @@
-name: Build RareCloud Proxies v1.5.1
+name: Build RareCloud Proxies v1.5.2
 
 on:
   workflow_dispatch:
@@ -20,23 +20,21 @@ jobs:
           sudo bash argosbx_refined_v1.3.sh
           echo "✅ Configuration and service generation completed."
 
+      - name: Copy generated files from root for upload
+        run: |
+          sudo mkdir -p ./agsbx_artifact
+          sudo cp -r /root/.agsbx/* ./agsbx_artifact/
+          sudo chown -R $USER:$USER ./agsbx_artifact
+          echo "✅ Copied files to ./agsbx_artifact"
+
       - name: Display subscription links
         run: |
           echo "=========== RareCloud Subscriptions ==========="
-          sudo cat /root/.agsbx/jh.txt || echo "jh.txt not found!"
+          cat ./agsbx_artifact/jh.txt || echo "jh.txt not found!"
           echo "==============================================="
 
       - name: Upload generated artifacts
         uses: actions/upload-artifact@v4
         with:
           name: rarecloud-proxy-configs
-          path: |
-            /root/.agsbx/sb.json
-            /root/.agsbx/xr.json
-            /root/.agsbx/jh.txt
-            /root/.agsbx/ufw_rules.sh
-            /root/.agsbx/uuid.txt
-            /root/.agsbx/ss2022.key
-            /root/.agsbx/socks5_cred.txt
-            /root/.agsbx/reality_info.txt
-            /root/.agsbx/systemd/
+          path: ./agsbx_artifact/
