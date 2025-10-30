@@ -1,4 +1,4 @@
-name: Build RareCloud Proxies v1.5.3
+name: Build RareCloud Proxies v1.5.4
 
 on:
   workflow_dispatch:
@@ -17,25 +17,25 @@ jobs:
 
       - name: Run argosbx_refined_v1.3.sh (config + systemd generation)
         run: |
-          sudo bash argosbx_refined_v1.3.sh
+          sudo -E bash argosbx_refined_v1.3.sh
           echo "✅ Configuration and service generation completed."
 
       - name: Copy generated files for upload
         run: |
           echo "📂 Checking .agsbx directory..."
-          sudo mkdir -p ./agsbx_artifact
           if [ -d "/home/runner/.agsbx" ]; then
             echo "✅ Found at /home/runner/.agsbx"
-            sudo cp -r /home/runner/.agsbx/* ./agsbx_artifact/
+            sudo cp -r /home/runner/.agsbx ./agsbx_artifact
           elif [ -d "/root/.agsbx" ]; then
             echo "✅ Found at /root/.agsbx"
-            sudo cp -r /root/.agsbx/* ./agsbx_artifact/
+            sudo cp -r /root/.agsbx ./agsbx_artifact
           else
             echo "❌ No .agsbx directory found."
+            ls -la /
+            ls -la /home
             exit 1
           fi
           sudo chown -R $USER:$USER ./agsbx_artifact
-          echo "✅ Copied files to ./agsbx_artifact"
 
       - name: Display subscription links
         run: |
