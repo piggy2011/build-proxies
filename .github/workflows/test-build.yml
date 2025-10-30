@@ -1,4 +1,4 @@
-name: Build RareCloud Proxies v1.5
+name: Build RareCloud Proxies v1.5.1
 
 on:
   workflow_dispatch:
@@ -23,7 +23,7 @@ jobs:
       - name: Display subscription links
         run: |
           echo "=========== RareCloud Subscriptions ==========="
-          cat ~/.agsbx/jh.txt || echo "jh.txt not found!"
+          sudo cat /root/.agsbx/jh.txt || echo "jh.txt not found!"
           echo "==============================================="
 
       - name: Upload generated artifacts
@@ -31,12 +31,12 @@ jobs:
         with:
           name: rarecloud-proxy-configs
           path: |
-            ~/.agsbx/sb.json
-            ~/.agsbx/xr.json
-            ~/.agsbx/jh.txt
-            ~/.agsbx/ufw_rules.sh
-            ~/.agsbx/uuid.txt
-            ~/.agsbx/ss2022.key
-            ~/.agsbx/socks5_cred.txt
-            ~/.agsbx/reality_info.txt
-            ~/.agsbx/systemd/
+            /root/.agsbx/sb.json
+            /root/.agsbx/xr.json
+            /root/.agsbx/jh.txt
+            /root/.agsbx/ufw_rules.sh
+            /root/.agsbx/uuid.txt
+            /root/.agsbx/ss2022.key
+            /root/.agsbx/socks5_cred.txt
+            /root/.agsbx/reality_info.txt
+            /root/.agsbx/systemd/
