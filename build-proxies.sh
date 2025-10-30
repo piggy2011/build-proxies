@@ -89,9 +89,15 @@ echo "✅ Xray-core 编译完成：$(pwd)/xray"
 # 3️⃣ 安装二进制
 # ===============================================================
 echo "📦 安装到 ${INSTALL_PREFIX}（需要sudo权限）..."
-sudo cp -v sing-box "$INSTALL_PREFIX"/ || true
-sudo cp -v xray "$INSTALL_PREFIX"/ || true
+sudo cp -v "$WORKDIR"/sing-box/sing-box "$INSTALL_PREFIX"/
+sudo cp -v "$WORKDIR"/Xray-core/xray "$INSTALL_PREFIX"/
 sudo chmod 0755 "$INSTALL_PREFIX"/sing-box "$INSTALL_PREFIX"/xray
+
+# 打印文件大小以确认
+echo "✅ sing-box installed:"
+ls -lh "$INSTALL_PREFIX"/sing-box
+echo "✅ xray installed:"
+ls -lh "$INSTALL_PREFIX"/xray
 
 echo
 echo "🎉 全部完成！二进制文件已安装："
