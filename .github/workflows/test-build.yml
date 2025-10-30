@@ -1,0 +1,30 @@
+name: Test Build Proxies
+
+on:
+  workflow_dispatch:   # 手动触发运行
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x build-proxies.sh
+
+      - name: Run build script
+        run: ./build-proxies.sh
+
+      - name: Verify build outputs
+        run: |
+          /usr/local/bin/sing-box version || true
+          /usr/local/bin/xray -version || true
+
+      - name: Upload compiled binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-binaries
+          path: |
+            /usr/local/bin/sing-box
+            /usr/local/bin/xray
