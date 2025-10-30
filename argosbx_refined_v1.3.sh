@@ -10,6 +10,15 @@ Green="\033[32m"; Yellow="\033[33m"; Red="\033[31m"; Font="\033[0m"
 
 echo -e "${Green}▶ Initializing RareCloud Proxy Environment...${Font}"
 
+# ---------- Environment detection ----------
+if [[ "$GITHUB_ACTIONS" == "true" ]]; then
+  # Running in GitHub Actions environment
+  if id runner &>/dev/null; then
+    HOME="/home/runner"
+  fi
+  echo -e "${Yellow}Detected GitHub Actions environment. Using HOME=${HOME}${Font}"
+fi
+
 # ---------- Working directory ----------
 WORKDIR="${HOME}/.agsbx"
 mkdir -p "${WORKDIR}" "${WORKDIR}/systemd"
