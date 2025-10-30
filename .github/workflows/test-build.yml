@@ -1,4 +1,4 @@
-name: Test Build Proxies
+name: Build Proxies v1.2 (with checksum and archive)
 
 on:
   workflow_dispatch:   # 手动触发运行
@@ -16,15 +16,26 @@ jobs:
       - name: Run build script
         run: ./build-proxies.sh
 
-      - name: Verify build outputs
+      - name: Generate archive and checksums
         run: |
-          /usr/local/bin/sing-box version || true
-          /usr/local/bin/xray -version || true
+          cd ~/build-proxies
+          # 定义输出目录
+          mkdir -p output
+          # 复制二进制文件
+          cp sing-box/sing-box output/
+          cp Xray-core/xray output/
+          cd output
+          # 生成校验文件
+          sha256sum sing-box xray > SHA256SUMS.txt
+          # 生成带日期的压缩包
+          DATE=$(date +'%Y%m%d_%H%M%S')
+          tar -czf proxies_${DATE}.tar.gz sing-box xray SHA256SUMS.txt
+          ls -lh proxies_${DATE}.tar.gz SHA256SUMS.txt
 
-      - name: Upload compiled binaries
+      - name: Upload compiled artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: compiled-binaries
+          name: proxies-archive
           path: |
-            /usr/local/bin/sing-box
-            /usr/local/bin/xray
+            ~/build-proxies/output/proxies_*.tar.gz
+            ~/build-proxies/output/SHA256SUMS.txt
