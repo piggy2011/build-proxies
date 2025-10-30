@@ -1,7 +1,7 @@
-name: Build Proxies v1.2 (with checksum and archive)
+name: Build RareCloud Proxies v1.4
 
 on:
-  workflow_dispatch:   # 手动触发运行
+  workflow_dispatch:
 
 jobs:
   build:
@@ -10,32 +10,33 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Make script executable
-        run: chmod +x build-proxies.sh
-
-      - name: Run build script
-        run: ./build-proxies.sh
-
-      - name: Generate archive and checksums
+      - name: Install dependencies
         run: |
-          cd ~/build-proxies
-          # 定义输出目录
-          mkdir -p output
-          # 复制二进制文件
-          cp sing-box/sing-box output/
-          cp Xray-core/xray output/
-          cd output
-          # 生成校验文件
-          sha256sum sing-box xray > SHA256SUMS.txt
-          # 生成带日期的压缩包
-          DATE=$(date +'%Y%m%d_%H%M%S')
-          tar -czf proxies_${DATE}.tar.gz sing-box xray SHA256SUMS.txt
-          ls -lh proxies_${DATE}.tar.gz SHA256SUMS.txt
+          sudo apt update
+          sudo apt install -y curl jq openssl coreutils
 
-      - name: Upload compiled artifacts
+      - name: Run argosbx_refined_v1.2.sh (configuration generation only)
+        run: |
+          bash argosbx_refined_v1.2.sh
+          echo "✅ Configuration generation completed."
+
+      - name: Display all subscription links
+        run: |
+          echo "=========== RareCloud Subscriptions ==========="
+          cat ~/.agsbx/jh.txt || echo "jh.txt not found!"
+          echo "==============================================="
+
+      - name: Upload generated artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: proxies-archive
+          name: rarecloud-proxy-configs
           path: |
-            ~/build-proxies/output/proxies_*.tar.gz
-            ~/build-proxies/output/SHA256SUMS.txt
+            ~/.agsbx/sb.json
+            ~/.agsbx/xr.json
+            ~/.agsbx/jh.txt
+            ~/.agsbx/ufw_rules.sh
+            ~/.agsbx/uuid.txt
+            ~/.agsbx/ss2022.key
+            ~/.agsbx/socks5_cred.txt
+            ~/.agsbx/reality_info.txt
+            ~/.agsbx/systemd/
