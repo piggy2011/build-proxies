@@ -1,4 +1,4 @@
-name: Build RareCloud Proxies v1.4
+name: Build RareCloud Proxies v1.5
 
 on:
   workflow_dispatch:
@@ -15,12 +15,12 @@ jobs:
           sudo apt update
           sudo apt install -y curl jq openssl coreutils
 
-      - name: Run argosbx_refined_v1.2.sh (configuration generation only)
+      - name: Run argosbx_refined_v1.3.sh (config + systemd generation)
         run: |
-          bash argosbx_refined_v1.2.sh
-          echo "✅ Configuration generation completed."
+          sudo bash argosbx_refined_v1.3.sh
+          echo "✅ Configuration and service generation completed."
 
-      - name: Display all subscription links
+      - name: Display subscription links
         run: |
           echo "=========== RareCloud Subscriptions ==========="
           cat ~/.agsbx/jh.txt || echo "jh.txt not found!"
